@@ -1,9 +1,12 @@
 import React from 'react';
 import './App.css';
 
+import Home from './pages/Home';
+import CreatePoint from './pages/CreatePoint';
+
 function App() {
   return (
-      <h1>3 DAY of the NLW Rockeseat</h1>
+    <Home />
   );
 }
 
