@@ -1,20 +1,150 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState, ChangeEvent, FormEvent} from 'react';
 import './styles.css';
 import logo from '../../assets/logo.svg'
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 
 import { Map, TileLayer, Marker } from 'react-leaflet';
+import { LeafletMouseEvent } from 'leaflet';
 import api from '../../services/api';
 
+import axios from 'axios';
+
+interface Item {
+  title: string;
+  image_url: string;
+  id: number;
+}
+
+interface IBGE_UF_Response {
+  sigla: string;
+  nome: string;
+}
+
+interface IBGE_City_Response {
+  id: number;
+  nome: string;
+}
+
 function CreatePoint() {
+  
+  const [items, setItems] = useState<Item[]>([]);
+  const [ufs, setUfs] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+
+  const [selectedUf, setSelectedUf] = useState('0');
+  const [selectedCity, setSelectedCity] = useState('0');
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+
+  const [initialPosition, setInitialPosition] = useState<[number, number]>([0,0]);
+  const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0,0]);
+
+  const history = useHistory();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    whatsapp: '',
+  })
 
   useEffect(() => {
+    navigator.geolocation.getCurrentPosition(position => {
+      const {latitude, longitude} = position.coords
+
+      setInitialPosition([latitude, longitude])
+    })
+  },[])
+  
+  useEffect(() => {
     api.get('items').then(response => {
-      console.log(response);
+      setItems(response.data);
+    })
+  },[]);
+
+  useEffect(() => {
+    axios.get<IBGE_UF_Response[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+      .then(response => {
+      const ufInitials = response.data.map(uf => uf.sigla);
+      setUfs(ufInitials);
     })
 
   },[]);
+
+  
+  useEffect(() => {
+    if(selectedUf === '0') return
+
+    axios
+      .get<IBGE_City_Response[]>(
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`
+      )
+      .then((resp) => {
+        const cityName = resp.data.map((city) => city.nome);
+
+        setCities(cityName);
+      });
+
+  },[selectedUf]);
+
+  function handleSeletedUf(event: ChangeEvent<HTMLSelectElement>){
+    const uf = event.target.value;
+    setSelectedUf(uf);
+    //console.log(uf);
+  }
+
+  function handleSeletedCity(event: ChangeEvent<HTMLSelectElement>){
+    const city = event.target.value;
+    setSelectedCity(city);
+  }
+
+  function handleMapClick(event: LeafletMouseEvent){
+    setSelectedPosition([
+      event.latlng.lat,
+      event.latlng.lng,
+    ])
+  }
+
+  function handleInputChange(event: ChangeEvent<HTMLInputElement>){
+    const {name, value} = event.target;
+
+    setFormData({...formData, [name]: value})
+  }
+
+  function handleSelectItem(id: number){
+    const alreadySelected = selectedItems.findIndex(item => item === id)
+
+    if(alreadySelected >= 0){
+      const filteredItems = selectedItems.filter(item => item !== id);
+      setSelectedItems(filteredItems);
+    }else{
+      setSelectedItems([...selectedItems, id]);
+    }
+  }
+
+  async function handleSubmit(event: FormEvent){
+    event.preventDefault();
+
+    const {name, email, whatsapp} = formData
+    const uf = selectedUf;
+    const city = selectedCity
+    const [latitude, longitude] = selectedPosition
+    const items = selectedItems
+
+    const data = {
+      name,
+      email,
+      whatsapp,
+      uf,
+      city,
+      latitude,
+      longitude,
+      items
+    };
+    // console.log(data);
+    await api.post('/points', data);
+    alert('Ponto de Coleta criado!');
+    history.push('/')
+  }
 
   return (
     <div id="page-create-point">
@@ -26,7 +156,7 @@ function CreatePoint() {
         </Link>
       </header>
 
-      <form >
+      <form onSubmit={handleSubmit}>
         <h1 style={{ textAlign: "center" }}>Cadastro do ponto de coleta</h1>
 
         <fieldset>
@@ -40,6 +170,8 @@ function CreatePoint() {
               type="text"
               name="name"
               id="name"
+              onChange={handleInputChange}
+              required
             />
           </div>
 
@@ -51,6 +183,8 @@ function CreatePoint() {
                 type="email"
                 name="email"
                 id="email"
+                onChange={handleInputChange}
+                required
               />
             </div>
 
@@ -60,10 +194,11 @@ function CreatePoint() {
                 type="text"
                 name="whatsapp"
                 id="whatsapp"
+                onChange={handleInputChange}
+                required
               />
             </div>
           </div>
-
 
         </fieldset>
 
@@ -73,29 +208,46 @@ function CreatePoint() {
             <span>Selecione o endereço no mapa</span>
           </legend>
 
-          <Map center={[-27.2092052, -49.6401092]} zoom={15} >
+          {/* <Map center={[-27.2092052, -49.6401092]} zoom={15} onclick={handleMapClick}> */}
+          <Map center={initialPosition} zoom={15} onclick={handleMapClick}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
           />
-              <Marker position={[-27.2092052, -49.6401092]}></Marker>
+              {/* <Marker position={[-27.2092052, -49.6401092]}></Marker> */}
+              <Marker position={selectedPosition} />
         </Map>
 
           <div className="field-group">
             <div className="field">
               <label htmlFor="uf">Estado (UF)</label>
-              <select name="uf" id="uf">
-                <option value="0">
-                  Selecione uma UF
+              <select
+                name="uf"
+                id="uf"
+                value={selectedUf}
+                onChange={handleSeletedUf}
+              >
+                <option value="0">Selecione uma UF</option>
+                {ufs.map(uf => (
+                <option key={uf} value={uf}>
+                  {uf}
                 </option>
+              ))}
               </select>
             </div>
             <div className="field">
               <label htmlFor="city">Cidade</label>
-              <select name="city" id="city">
-                <option value="0">
-                  Selecione uma CIDADE
+              <select name="city" id="city"
+              value={selectedCity}
+              onChange={handleSeletedCity}
+              required  
+              >
+              <option value="0">Selecione uma cidade</option>
+              {cities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
                 </option>
+              ))}
               </select>
             </div>
           </div>
@@ -108,29 +260,24 @@ function CreatePoint() {
             <span>Selecione um ou mais itens a baixo</span>
           </legend>
           <ul className="items-grid">
-            <li className="selected">
-              <img src="http://localhost:3333/uploads/baterias.svg" alt="Teste"/>
-              <span>Baterias</span>
+          {/*{items.map(item => (
+              <li 
+              key={item.id}
+              className="selected">
+                <img src={item.image_url} alt={item.title} />
+                <span>{item.title}</span>
+              </li>
+            ))} */}
+                      {items.map((item) => (
+            <li
+              key={item.id}
+              onClick={ () => handleSelectItem(item.id)}
+              className={selectedItems.includes(item.id) ? 'selected' : ''}
+              >
+              <img src={item.image_url} alt={item.title} />
+              <span>{item.title}</span>
             </li>
-            <li className="selected">
-              <img src="http://localhost:3333/uploads/eletronicos.svg" alt="Teste"/>
-              <span>Eletrônicos</span>
-            </li>
-            <li className="selected">
-              <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste"/>
-              <span>Lâmpadas</span>
-            </li>            <li className="selected">
-              <img src="http://localhost:3333/uploads/baterias.svg" alt="Teste"/>
-              <span>Óleo de Cozinha</span>
-            </li>
-            <li className="selected">
-              <img src="http://localhost:3333/uploads/organicos.svg" alt="Teste"/>
-              <span>Orgânicos</span>
-            </li>
-            <li className="selected">
-              <img src="http://localhost:3333/uploads/papeis-papelao.svg" alt="Teste"/>
-              <span>Papéis e Papelão</span>
-            </li>
+          ))}
           </ul>
 
         </fieldset>
