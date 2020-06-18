@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "ecoleta",
+    "slug": "ecoleta",
     "platforms": [
       "ios",
       "android",
@@ -22,7 +22,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.agf.ecoleta",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.agf.ecoleta",
+      "versionCode": 1
     }
   }
 }
