@@ -18,7 +18,7 @@
 
 > ---
 >
-> ## 🚀 _**Technologies**_:
+> ## :rocket: _**Technologies**_:
 >
 > | Platform  | Technologies                                                                                         |
 > | --------- | ---------------------------------------------------------------------------------------------------- |
@@ -56,7 +56,7 @@
 
 > ---
 >
-> ## 📝 _License_:
+> ## :memo: _**License**_:
 >
 > This project is under MIT. See at here [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) for more informations.
 >
