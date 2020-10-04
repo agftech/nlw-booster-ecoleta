@@ -33,29 +33,29 @@
 >
 >
 > #### ☁️ `Server:`
-> - [celebrate](https://github.com/arb/celebrate)
-> - [cors](https://github.com/expressjs/cors)
-> - [express](https://expressjs.com/)
-> - [knexjs](http://knexjs.org/)
-> - [multer](https://github.com/expressjs/multer)
-> - [sqlite3](https://github.com/mapbox/node-sqlite3)
+> - [celebrate](https://github.com/arb/celebrate);
+> - [cors](https://github.com/expressjs/cors);
+> - [express](https://expressjs.com/);
+> - [knexjs](http://knexjs.org/);
+> - [multer](https://github.com/expressjs/multer);
+> - [sqlite3](https://github.com/mapbox/node-sqlite3);
 >
 > #### 💻 `Web:`
-> - [axios](https://github.com/axios/axios)
-> - [leaflet](https://leafletjs.com/)
-> - [react](https://reactjs.org/)
-> - [react-dropzone](https://react-dropzone.js.org/)
-> - [react-icons](https://react-icons.github.io/react-icons/)
-> - [react-leaflet](https://react-leaflet.js.org/)
-> - [react-router](https://reactrouter.com/web/guides/quick-start)
-> - [typescript](https://www.typescriptlang.org/)
+> - [axios](https://github.com/axios/axios);
+> - [leaflet](https://leafletjs.com/);
+> - [react](https://reactjs.org/);
+> - [react-dropzone](https://react-dropzone.js.org/);
+> - [react-icons](https://react-icons.github.io/react-icons/);
+> - [react-leaflet](https://react-leaflet.js.org/);
+> - [react-router](https://reactrouter.com/web/guides/quick-start);
+> - [typescript](https://www.typescriptlang.org/);
 >
 > #### 📱 `Mobile:`
 > - [axios](https://github.com/axios/axios);
-> - [expo](https://expo.io/) _`(expo-constants; expo-font; expo-mail-composer)`_
-> - [mem](https://github.com/sindresorhus/mem)
-> - [react](https://reactjs.org/)
-> - [react-native](http://facebook.github.io/react-native/) _`(@react-navigation/native; @react-navigation/stack; @react-native-community/masked-view; react-native-gesture-handler; react-native-maps; react-native-picker-select; react-native-reanimated; react-native-safe-area-context; react-native-safe-area-context; react-native-screens; react-native-svg; react-native-web)`_
+> - [expo](https://expo.io/) _`(expo-constants; expo-font; expo-mail-composer)`_;
+> - [mem](https://github.com/sindresorhus/mem);
+> - [react](https://reactjs.org/);
+> - [react-native](http://facebook.github.io/react-native/) _`(@react-navigation/native; @react-navigation/stack; @react-native-community/masked-view; react-native-gesture-handler; react-native-maps; react-native-picker-select; react-native-reanimated; react-native-safe-area-context; react-native-safe-area-context; react-native-screens; react-native-svg; react-native-web)`_;
 > ---
 
 > ---
