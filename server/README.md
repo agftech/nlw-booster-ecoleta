@@ -12,8 +12,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/agftech/nlw-booster-ecoleta/tree/master/server#technologies"><img src="https://img.shields.io/badge/Technologies-blue?style=for-the-badge"/></a>&nbsp;&nbsp;
-  <a href="https://github.com/agftech/nlw-booster-ecoleta/tree/master/server#license"><img src="https://img.shields.io/badge/License-blue?style=for-the-badge"/></a>
+  <a href="#rocket-technologies"><img src="https://img.shields.io/badge/Technologies-blue?style=for-the-badge"/></a>&nbsp;&nbsp;
+  <a href="#memo-license"><img src="https://img.shields.io/badge/License-blue?style=for-the-badge"/></a>
 </p>
 
 > ---
